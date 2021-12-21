@@ -430,24 +430,25 @@ public class Mail {
 
     @Override
     public String toString() {
-        return "Mail{" +
-                "id=" + id +
-                ", msgid='" + msgId + '\'' +
-                ", sender='" + sender + '\'' +
-                ", replyTo='" + replyTo + '\'' +
-                ", subject='" + subject + '\'' +
-                ", htmlContent='" + htmlContent + '\'' +
-                ", plainContent='" + plainContent + '\'' +
-                ", cc='" + cc + '\'' +
-                ", to='" + to + '\'' +
-                ", bcc='" + bcc + '\'' +
-                ", attachments=" + attachments +
-                ", sendData=" + sendData +
-                ", status='" + status + '\'' +
-                ", hasHtmlContent=" + hasHtmlContent +
-                ", hasPlainContent=" + hasPlainContent +
-                ", hasAttachments=" + hasAttachments +
-                ", attachmentName=" + attachmentName +
-                '}';
+//        return "Mail{" +
+//                "id=" + id +
+//                ", msgid='" + msgId + '\'' +
+//                ", sender='" + sender + '\'' +
+//                ", replyTo='" + replyTo + '\'' +
+//                ", subject='" + subject + '\'' +
+//                ", htmlContent='" + htmlContent + '\'' +
+//                ", plainContent='" + plainContent + '\'' +
+//                ", cc='" + cc + '\'' +
+//                ", to='" + to + '\'' +
+//                ", bcc='" + bcc + '\'' +
+//                ", attachments=" + attachments +
+//                ", sendData=" + sendData +
+//                ", status='" + status + '\'' +
+//                ", hasHtmlContent=" + hasHtmlContent +
+//                ", hasPlainContent=" + hasPlainContent +
+//                ", hasAttachments=" + hasAttachments +
+//                ", attachmentName=" + attachmentName +
+//                '}';
+        return this.subject;
     }
 }

@@ -243,13 +243,14 @@ public class Config {
 
     @Override
     public String toString() {
-        return "Config{" +
-                "properties=" + properties +
-                ", newMail=" + newMail +
-                ", id=" + id +
-                ", configName='" + configName + '\'' +
-                ", authenticator=" + authenticator +
-                ", hasNewMail=" + hasNewMail +
-                '}';
+//        return "Config{" +
+//                "properties=" + properties +
+//                ", newMail=" + newMail +
+//                ", id=" + id +
+//                ", configName='" + configName + '\'' +
+//                ", authenticator=" + authenticator +
+//                ", hasNewMail=" + hasNewMail +
+//                '}';
+        return this.configName;
     }
 }
