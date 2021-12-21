@@ -29,6 +29,7 @@ import outmail.model.Mail;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -393,8 +394,10 @@ public class HomePane {
         });
 
         //listView 选中事件
+        Mail tmp = new Mail();
         listView.getSelectionModel().selectedItemProperty().addListener(e -> {
             Mail mail = listView.getSelectionModel().getSelectedItem();
+            tmp.setId(mail.getId());
             //调用显示邮件的set，把mail字段的值写进去
             senderLabel.setText(mail.getSender());
             timeLabel.setText(String.valueOf(mail.getSendData()));
@@ -419,7 +422,16 @@ public class HomePane {
         attachmentList.getSelectionModel().selectedItemProperty().addListener(e -> {
             FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showSaveDialog(new Stage());
-
+            if(file != null) {
+                String fileName = attachmentList.getSelectionModel().getSelectedItem();
+                Mail mail = new Mail();
+                mail.setId(tmp.getId());
+                try {
+                    API.downLoadAttachment(mail, fileName, file);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
         });
 
         //ComboBox选中事件
