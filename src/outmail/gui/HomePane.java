@@ -50,6 +50,7 @@ public class HomePane {
 
     public static void start() {
         Stage stage = new Stage();
+        Mail tmp = new Mail();
         BorderPane pane = new BorderPane(); // 主面板
 
         //下拉列表
@@ -335,7 +336,6 @@ public class HomePane {
         // 按钮事件处理
         inbox.setOnAction(e -> {
             reloadList(listView, "InBox", cbo);
-
         });
 
         draftBox.setOnAction(e -> {
@@ -349,10 +349,10 @@ public class HomePane {
         delMail.setOnAction(e -> {
             Mail mail = listView.getSelectionModel().getSelectedItem();
             API.delMail(mail);
+            reloadList(listView, "InBox", cbo);
         });
 
         getMail.setOnAction(e -> {
-
             reloadList(listView, "InBox", cbo);
         });
 
@@ -368,10 +368,10 @@ public class HomePane {
         });
 
         replyMail.setOnAction(e -> {
-            Mail tmp = listView.getSelectionModel().getSelectedItem();
+            Mail tmps = listView.getSelectionModel().getSelectedItem();
             Mail mail = new Mail();
-            mail.setSender(tmp.getTo());
-            mail.setTo(tmp.getReplyTo());
+            mail.setSender(tmps.getTo());
+            mail.setTo(tmps.getReplyTo());
             SendMailPane.start(config, mail);
         });
 
@@ -394,10 +394,13 @@ public class HomePane {
         });
 
         //listView 选中事件
-        Mail tmp = new Mail();
         listView.getSelectionModel().selectedItemProperty().addListener(e -> {
             Mail mail = listView.getSelectionModel().getSelectedItem();
-            tmp.setId(mail.getId());
+            if(mail == null) {
+                mail = new Mail();
+            } else {
+                tmp.setId(mail.getId());
+            }
             //调用显示邮件的set，把mail字段的值写进去
             senderLabel.setText(mail.getSender());
             timeLabel.setText(String.valueOf(mail.getSendData()));
@@ -408,6 +411,8 @@ public class HomePane {
             if (mail.getHtmlContent() == null) {
                 if (mail.getPlainContent() == null) {
                     webEngine.loadContent("", "text/html");
+                } else {
+                    webEngine.loadContent(mail.getPlainContent(), "text/plain");
                 }
             } else {
                 webEngine.loadContent(mail.getHtmlContent(), "text/html");
@@ -417,13 +422,18 @@ public class HomePane {
             attachmentList.setItems(null);
             if (attachmentName.size() > 0)
                 attachmentList.setItems(FXCollections.observableList(attachmentName));
+
         });
 
         attachmentList.getSelectionModel().selectedItemProperty().addListener(e -> {
+            String fileName = attachmentList.getSelectionModel().getSelectedItem();
             FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialFileName(fileName);
+            fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All File", "*.*")
+            );
             File file = fileChooser.showSaveDialog(new Stage());
             if(file != null) {
-                String fileName = attachmentList.getSelectionModel().getSelectedItem();
                 Mail mail = new Mail();
                 mail.setId(tmp.getId());
                 try {
@@ -471,7 +481,7 @@ public class HomePane {
     public static void reloadList(ListView<Mail> list, String type, ComboBox<Config> cbo) {
         config = cbo.getValue();
         ArrayList<Mail> mailList = null;
-        if (type.equals("Inbox")) {
+        if (type.equals("InBox")) {
             mailList = API.queryInbox(config);
         } else if (type.equals("SendBox")) {
             mailList = API.querySendBox(config);
