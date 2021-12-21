@@ -54,12 +54,12 @@ public class HomePane {
         //下拉列表
         ComboBox<Config> cbo = new ComboBox<>();
         cbo.getItems().addAll(API.CONFIGS);
-        cbo.setValue(new Config());
+        cbo.setValue(API.CONFIGS.get(0));
         config = cbo.getValue();
         cbo.setPrefSize(80, 35);
 
         // 列表
-        ListView<Mail> listView = mailListView(new Config());
+        ListView<Mail> listView = mailListView(config);
 
 
         ImageView imageViewGetMail = null;
@@ -297,7 +297,7 @@ public class HomePane {
         bccLabel1.setFont(font);
 
         ListView<String> attachmentList = new ListView<>();
-        attachmentList.setPrefHeight(200);
+        attachmentList.setPrefHeight(100);
 
         GridPane gp1 = new GridPane();
         GridPane gp2 = new GridPane();

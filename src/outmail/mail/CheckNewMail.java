@@ -46,7 +46,7 @@ public class CheckNewMail extends TimerTask {
 
     private HashSet<String> getSet() {
         HashSet<String> inbox = new HashSet<>();
-        ArrayList<Mail> list = API.queryInbox(API.CONFIGS.get(0));
+        ArrayList<Mail> list = API.queryAllMail(config);
         if (list != null) {
             for (Mail m : list) {
                 inbox.add(m.getMsgId());

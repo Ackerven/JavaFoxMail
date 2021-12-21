@@ -334,12 +334,20 @@ public class API {
 
     /**
      * 获取未读邮件（T）
-     *
      * @param config Config对象
      * @return 返回邮件列表
      */
     public static ArrayList<Mail> queryRecentBox(Config config) {
         return filterMail(config, Mail.RECENT);
+    }
+
+    /**
+     * 查询所有邮件
+     * @param config    Config对象
+     * @return          返回Mail对象列表
+     */
+    public static ArrayList<Mail> queryAllMail(Config config) {
+        return MYSQL.queryAllMail(config);
     }
 
     /**
@@ -370,7 +378,9 @@ public class API {
      * @return 成功返回true，失败返回false
      */
     public static boolean delMail(Mail mail) {
-        return MYSQL.delMail(mail.getId());
+//        return MYSQL.delMail(mail.getId());
+        mail.setStatus(Mail.DELETE);
+        return MYSQL.updateStatus(mail);
     }
 
     /**
