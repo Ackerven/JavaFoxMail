@@ -4,6 +4,7 @@ import outmail.controller.API;
 import outmail.model.Config;
 import outmail.model.Mail;
 
+import javax.mail.Message;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -17,13 +18,11 @@ import java.util.HashSet;
  * @date 2021/12/12 21:51
  */
 public class CheckNewMail extends Thread {
-    private final Config config;
     private final long sleepTime;
 
-    public CheckNewMail(Config config, long sleepTime) {
-        this.config = config;
+    public CheckNewMail(long sleepTime) {
         this.sleepTime = sleepTime;
-//        this.setDaemon(true);
+        this.setDaemon(true);
     }
 
     /**
@@ -32,26 +31,39 @@ public class CheckNewMail extends Thread {
     @Override
     public void run() {
         while(true) {
-            System.out.println(Thread.currentThread().getName() + " " + config.getConfigName() + " Start: " + new Date());
-//        System.out.println(config);
-            ReceiveMail receiveMail = new ReceiveMail(config);
-            MailParser mailParser = new MailParser();
-            ArrayList<Mail> list = mailParser.parse(receiveMail.fetchInbox());
-            System.out.println("Fetch: " + config.getConfigName());
-            System.out.println(list);
-            HashSet<String> inbox = getSet();
-            boolean isNew = false;
-            for (Mail m : list) {
-                if (!inbox.contains(m.getMsgId())) {
-                    System.out.println("[INFO] " + config.getConfigName() + " New Mail: " + m.getSubject());
-                    isNew = true;
-                    config.addMailToNewMail(m);
+            System.out.println(Thread.currentThread().getName() + " Start: " + new Date());
+            for(Config config : API.CONFIGS) {
+                System.out.println("[INFO] " + Thread.currentThread().getName()  + " Fetch " + config.getConfigName());
+                ReceiveMail receiveMail = new ReceiveMail(config);
+                System.out.println(receiveMail);
+                MailParser mailParser = new MailParser();
+                Message[] msgList = receiveMail.fetchInbox();
+//                System.out.print("receiveMail: [");
+//                for(Message msg: msgList) {
+//                    try {
+//                        System.out.print(msg.getSubject() + ", ");
+//                    } catch (MessagingException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                System.out.println("]");
+                ArrayList<Mail> list = mailParser.parse(msgList);
+//                System.out.println("Fetch: " + config.getConfigName());
+//                System.out.println(list);
+                HashSet<String> inbox = getSet(config);
+                boolean isNew = false;
+                for (Mail m : list) {
+                    if (!inbox.contains(m.getMsgId())) {
+                        System.out.println("[INFO] " + config.getConfigName() + " New Mail: " + m.getSubject());
+                        isNew = true;
+                        config.addMailToNewMail(m);
+                    }
                 }
+                if(isNew)
+                    API.addMailToMySQL(config);
+                receiveMail.closeStore();
             }
-            if(isNew)
-                API.addMailToMySQL(config);
-            System.out.println(Thread.currentThread().getName() + " " + config.getConfigName() + " END: " + new Date());
-            list.clear();
+            System.out.println(Thread.currentThread().getName() + " END: " + new Date());
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
@@ -60,7 +72,7 @@ public class CheckNewMail extends Thread {
         }
     }
 
-    private HashSet<String> getSet() {
+    private HashSet<String> getSet(Config config) {
         HashSet<String> inbox = new HashSet<>();
         ArrayList<Mail> list = API.queryAllMail(config);
 //        System.out.println(config.getConfigName() + " DB: ");

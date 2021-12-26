@@ -13,8 +13,8 @@ import java.util.Properties;
  * 接收邮件的封装
  */
 public class ReceiveMail {
-    Config config;
-
+    private Config config;
+    private Store store;
     public ReceiveMail(Config config) {
         this.config = config;
     }
@@ -27,11 +27,12 @@ public class ReceiveMail {
     public Message[] fetchInbox(Properties props, Authenticator authenticator, String protocol) {
         Message[] messages = null;
         Session session = Session.getDefaultInstance(props, authenticator);
-        Store store = null;
         Folder folder = null;
         try {
             store = protocol == null || protocol.trim().length() == 0 ? session.getStore() : session.getStore(protocol);
-            store.connect();
+            System.out.println(config.getUserName() + " : " + config.getPassWord());
+            store.connect(config.getUserName(), config.getPassWord());
+            System.out.println(store);
             folder = store.getFolder("INBOX"); 
             folder.open(Folder.READ_ONLY);
             messages = folder.getMessages();
@@ -41,5 +42,20 @@ public class ReceiveMail {
             e.printStackTrace();
         }
         return messages;
+    }
+
+    public void closeStore() {
+        try {
+            this.store.close();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ReceiveMail{" +
+                "config=" + config +
+                '}';
     }
 }

@@ -29,7 +29,7 @@ public class API {
     private static final String USERNAME = "foxmail";
     private static final String PASSWORD = "foxmail";
     private static final MySQL MYSQL = new MySQL(URL, USERNAME, PASSWORD);
-    private static ArrayList<CheckNewMail> list = new ArrayList<>();
+    private static CheckNewMail cnm = new CheckNewMail(20000L);
 
     /**
      * 程序运行时先执行初始化（T）
@@ -43,7 +43,8 @@ public class API {
             return false;
         }
         CONFIGS.addAll(list);
-        checkNewMail();
+        cnm.start();
+//        checkNewMail();
         return true;
     }
 
@@ -51,16 +52,8 @@ public class API {
      * 启动接收新邮件的线程
      */
     public static void checkNewMail() {
-        if(list.size() > 0) {
-            for(CheckNewMail cn: list) {
-                cn.stop();
-            }
-        }
-        list.clear();
-        for(Config config: CONFIGS) {
-            CheckNewMail cnm = new CheckNewMail(config, 20000L);
+        if(!cnm.isAlive()) {
             cnm.start();
-            list.add(cnm);
         }
     }
 

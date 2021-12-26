@@ -51,7 +51,7 @@ public class MailParser {
         return mail;
     }
 
-    public synchronized ArrayList<Mail> parse(Message... messages) {
+    public ArrayList<Mail> parse(Message... messages) {
         ArrayList<Mail> list = new ArrayList<>();
         if (messages == null || messages.length == 0) {
             System.out.println("没有任何邮件");
