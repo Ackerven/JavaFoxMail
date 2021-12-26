@@ -30,7 +30,6 @@ public class ReceiveMail {
         Folder folder = null;
         try {
             store = protocol == null || protocol.trim().length() == 0 ? session.getStore() : session.getStore(protocol);
-            System.out.println(config.getUserName() + " : " + config.getPassWord());
             store.connect(config.getUserName(), config.getPassWord());
             System.out.println(store);
             folder = store.getFolder("INBOX"); 

@@ -6,6 +6,7 @@ import outmail.model.Mail;
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 
 /**
@@ -34,7 +35,9 @@ public class MailParser {
             mail.setHasHtmlContent(parser.hasHtmlContent());
             mail.setHasPlainContent(parser.hasPlainContent());
             mail.setHasAttachments(parser.hasAttachments());
-
+            if(mail.getSendData() == null) {
+                mail.setSendData(new Date());
+            }
             Enumeration enumMail = parser.getMimeMessage().getAllHeaders();
             while (enumMail.hasMoreElements()) {
                 Header h = (Header) enumMail.nextElement();

@@ -259,6 +259,10 @@ public class SendMailPane {
 //            System.out.println(mail);
             //调用API发送邮件
             API.sendMail(config, mail);
+            if(draft != null) {
+                draft.setStatus(Mail.DELETE);
+                API.updateMailStatus(config, draft);
+            }
         });
 
 

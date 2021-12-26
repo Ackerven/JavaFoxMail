@@ -35,21 +35,9 @@ public class CheckNewMail extends Thread {
             for(Config config : API.CONFIGS) {
                 System.out.println("[INFO] " + Thread.currentThread().getName()  + " Fetch " + config.getConfigName());
                 ReceiveMail receiveMail = new ReceiveMail(config);
-                System.out.println(receiveMail);
                 MailParser mailParser = new MailParser();
                 Message[] msgList = receiveMail.fetchInbox();
-//                System.out.print("receiveMail: [");
-//                for(Message msg: msgList) {
-//                    try {
-//                        System.out.print(msg.getSubject() + ", ");
-//                    } catch (MessagingException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                System.out.println("]");
                 ArrayList<Mail> list = mailParser.parse(msgList);
-//                System.out.println("Fetch: " + config.getConfigName());
-//                System.out.println(list);
                 HashSet<String> inbox = getSet(config);
                 boolean isNew = false;
                 for (Mail m : list) {
