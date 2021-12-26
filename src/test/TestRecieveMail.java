@@ -23,7 +23,7 @@ public class TestRecieveMail {
         long startTime = System.currentTimeMillis();
         API.init();
         ReceiveMail receiveMail = new ReceiveMail(API.CONFIGS.get(0));
-        ArrayList<Mail> list = MailParser.parse(receiveMail.fetchInbox());
+        ArrayList<Mail> list = new MailParser().parse(receiveMail.fetchInbox());
         for(Mail m: list) {
 //            System.out.println(m);
             mySQL.addMessage(API.CONFIGS.get(0), m);

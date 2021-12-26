@@ -26,6 +26,7 @@ import outmail.model.Mail;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -243,8 +244,8 @@ public class SendMailPane {
         }
 
         //发送按钮
+        Mail mail = new Mail();
         send.setOnAction(e -> {
-            Mail mail = new Mail();
             //TODO 获取各种框的值。
             //调用mail.setXXX方法构建Mail对象
             mail.setTo(tbTo.getText());
@@ -252,13 +253,15 @@ public class SendMailPane {
             mail.setBcc(tbBcc.getText());
             mail.setSubject(tbSubject.getText());
             mail.setHtmlContent(htmlEditor.getHtmlText());
+            mail.setSender(config.getConfigName());
+            mail.setSendData(new Date());
 
-            System.out.println(mail);
+//            System.out.println(mail);
             //调用API发送邮件
             API.sendMail(config, mail);
         });
 
-        Mail mail = new Mail();
+
         //保存为草稿按钮
         save.setOnAction(e -> {
             //TODO 获取各种框的值。
@@ -268,6 +271,8 @@ public class SendMailPane {
             mail.setBcc(tbBcc.getText());
             mail.setSubject(tbSubject.getText());
             mail.setHtmlContent(htmlEditor.getHtmlText());
+            mail.setSender(config.getConfigName());
+            mail.setSendData(new Date());
             //调用API保存邮件为草稿
             API.saveMail(config, mail);
         });
@@ -288,6 +293,7 @@ public class SendMailPane {
                 //显示附件文件名
                 Label label = new Label(s);
                 scrollPane.setContent(label);
+                mail.setAttachment(list);
             }
         });
 

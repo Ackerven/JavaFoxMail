@@ -449,6 +449,6 @@ public class Mail {
 //                ", hasAttachments=" + hasAttachments +
 //                ", attachmentName=" + attachmentName +
 //                '}';
-        return this.subject;
+        return this.getSubject();
     }
 }

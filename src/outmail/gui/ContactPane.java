@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class ContactPane {
     public static void Start(Config config) {
         Stage stage = new Stage();
-        ArrayList<Contact> result = API.queryContact(config, "name", null, true);
+        ArrayList<Contact> result = API.queryAllContact(config);
 //        ImageView imageViewAdd = new ImageView("file:D:\\Java高编\\FoxMail\\img\\添加联系人.png");
         ImageView imageViewAdd = null;
         try {
@@ -346,6 +346,7 @@ public class ContactPane {
                 public void handle(ActionEvent event) {
                     String name = findName.getText();
                     findName.setText("");// 清空
+                    ArrayList<Contact> result = API.queryAllContact(config);
                     Contact o = null;
                     for (int i = 0; i < result.size(); i++) {
                         Contact a = result.get(i);

@@ -3,6 +3,7 @@ package outmail.model;
 import outmail.utils.AuthenticatorGenerator;
 
 import javax.mail.Authenticator;
+import javax.mail.Message;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -226,7 +227,7 @@ public class Config {
      * 获取新邮件（T）
      * @return 返回一个邮件列表
      */
-    public synchronized ArrayList<Mail> getNewMail() {
+    public ArrayList<Mail> getNewMail() {
         System.out.println("[INFO] Calling Config::getNewMail...");
         this.hasNewMail = false;
         return newMail;
@@ -236,7 +237,7 @@ public class Config {
      * 添加一份邮件到列表（T）
      * @param mail Mail对象
      */
-    public synchronized void addMailToNewMail(Mail mail) {
+    public void addMailToNewMail(Mail mail) {
         this.hasNewMail = true;
         newMail.add(mail);
     }
@@ -252,5 +253,15 @@ public class Config {
 //                ", hasNewMail=" + hasNewMail +
 //                '}';
         return this.configName;
+    }
+
+    private ArrayList<Message> serverMailList = new ArrayList<>();
+
+    public ArrayList<Message> getServerMail() {
+        return serverMailList;
+    }
+
+    public void setServerMailList(ArrayList<Message> list) {
+        this.serverMailList = list;
     }
 }

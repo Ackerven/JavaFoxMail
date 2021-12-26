@@ -30,6 +30,7 @@ public class API {
     private static final String USERNAME = "foxmail";
     private static final String PASSWORD = "foxmail";
     private static final MySQL MYSQL = new MySQL(URL, USERNAME, PASSWORD);
+    private static ArrayList<Timer> timerList = new ArrayList<>();
 
     /**
      * 程序运行时先执行初始化（T）
@@ -51,10 +52,16 @@ public class API {
      * 启动接收新邮件的线程
      */
     public static void checkNewMail() {
-        ArrayList<Timer> list = new ArrayList<>();
+        if(timerList.size() > 0) {
+            for(int i = 0; i < timerList.size(); i++) {
+                timerList.get(i).cancel();
+            }
+        }
+        timerList = new ArrayList<>();
         for (int i = 0; i < API.CONFIGS.size(); i++) {
-            list.add(new Timer(true));
-            list.get(i).schedule(new CheckNewMail(API.CONFIGS.get(i)), 0L, 30000L);
+            Timer timer = new Timer(true);
+            timer.schedule(new CheckNewMail(API.CONFIGS.get(i)), 0L, 30000L);
+            timerList.add(timer);
         }
     }
 
@@ -121,7 +128,7 @@ public class API {
             return false;
         }
         try {
-            transport.connect();
+            transport.connect(config.getUserName(), config.getPassWord());
         } catch (MessagingException e) {
             System.out.println("[ERROR] API::isConnect() throws Exception! (connect)");
             e.printStackTrace();
@@ -275,6 +282,7 @@ public class API {
             e.printStackTrace();
             return false;
         }
+        mail.setStatus(Mail.SEND);
         MYSQL.addMessage(config, mail);
         return true;
     }
@@ -470,11 +478,15 @@ public class API {
      * 添加邮件到数据库（T）
      *
      * @param config Config对象
-     * @param mail   Mail对象
      * @return 成功返回true，失败返回false
      */
-    public static boolean addMailToMySQL(Config config, Mail mail) {
-        return MYSQL.addMessage(config, mail);
+    public static boolean addMailToMySQL(Config config) {
+        ArrayList<Mail> list = config.getNewMail();
+        for(Mail m: list) {
+            MYSQL.addMessage(config, m);
+        }
+        config.getNewMail().clear();
+        return true;
     }
 
     /**

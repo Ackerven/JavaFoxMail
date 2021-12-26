@@ -20,8 +20,7 @@ public class Main extends Application {
         if(API.init()) {
             HomePane.start();
         } else {
-            InitPane.start(false);
-
+            InitPane.start(false, null);
         }
 //        ContactPane.Start(new Config());
 //        HomePane.start();

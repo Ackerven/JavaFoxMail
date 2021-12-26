@@ -32,7 +32,7 @@ public class ReceiveMail {
         try {
             store = protocol == null || protocol.trim().length() == 0 ? session.getStore() : session.getStore(protocol);
             store.connect();
-            folder = store.getFolder("INBOX");
+            folder = store.getFolder("INBOX"); 
             folder.open(Folder.READ_ONLY);
             messages = folder.getMessages();
         } catch (NoSuchProviderException e) {

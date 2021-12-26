@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import outmail.controller.API;
+import outmail.model.Config;
 
 import java.awt.*;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import java.util.Objects;
  * @date 2021/12/18 20:29
  */
 public class InitPane {
-    public static void start(boolean newConfig) {
+    public static void start(boolean newConfig, ComboBox<Config> cbo) {
         final String[] IP = new String[]{"POP 服务器：", "IMAP服务器："};
         Stage stage = new Stage();
         stage.setTitle("新建账号");
@@ -150,9 +151,12 @@ public class InitPane {
                 if (API.addNewConfig(accounts.getText(),passwordField.getText(),server2.getText(),
                         port2.getText(),kind.getValue(),server1.getText(),port1.getText(),SSL2.isSelected(),SSL1.isSelected())) {
                     stage.close();
-                    if(newConfig) {
+                    if(!newConfig) {
                         API.checkNewMail();
                         HomePane.start();
+                    } else {
+                        API.checkNewMail();
+                        cbo.getItems().add(API.CONFIGS.get(API.CONFIGS.size() - 1));
                     }
 
                 } else {

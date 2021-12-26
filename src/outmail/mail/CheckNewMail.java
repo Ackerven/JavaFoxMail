@@ -19,11 +19,9 @@ import java.util.TimerTask;
  */
 public class CheckNewMail extends TimerTask {
     private final Config config;
-    private final ReceiveMail receiveMail;
 
     public CheckNewMail(Config config) {
         this.config = config;
-        this.receiveMail = new ReceiveMail(config);
     }
 
     /**
@@ -31,22 +29,33 @@ public class CheckNewMail extends TimerTask {
      */
     @Override
     public void run() {
-        System.out.println(Thread.currentThread().getName() + " Start: " + new Date());
-        ArrayList<Mail> list = MailParser.parse(receiveMail.fetchInbox());
+        System.out.println(Thread.currentThread().getName() + " " + config.getConfigName() + " Start: " + new Date());
+//        System.out.println(config);
+        ReceiveMail receiveMail = new ReceiveMail(config);
+        MailParser mailParser = new MailParser();
+        ArrayList<Mail> list = mailParser.parse(receiveMail.fetchInbox());
+        System.out.println("Fetch: " + config.getConfigName());
+        System.out.println(list);
         HashSet<String> inbox = getSet();
+        boolean isNew = false;
         for (Mail m : list) {
             if (!inbox.contains(m.getMsgId())) {
                 System.out.println("[INFO] " + config.getConfigName() + " New Mail: " + m.getSubject());
+                isNew = true;
                 config.addMailToNewMail(m);
-                API.addMailToMySQL(config, m);
             }
         }
-        System.out.println(Thread.currentThread().getName() + " END: " + new Date());
+        if(isNew)
+            API.addMailToMySQL(config);
+        System.out.println(Thread.currentThread().getName() + " " + config.getConfigName() + " END: " + new Date());
+        list.clear();
     }
 
     private HashSet<String> getSet() {
         HashSet<String> inbox = new HashSet<>();
         ArrayList<Mail> list = API.queryAllMail(config);
+//        System.out.println(config.getConfigName() + " DB: ");
+//        System.out.println(list);
         if (list != null) {
             for (Mail m : list) {
                 inbox.add(m.getMsgId());

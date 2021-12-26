@@ -306,7 +306,7 @@ public final class MySQL {
             e.printStackTrace();
             return null;
         }
-        return null;
+        return list;
     }
 
     private void handler(ResultSet resultSet, ArrayList<Contact> list) throws Exception {
@@ -1016,7 +1016,6 @@ public final class MySQL {
      */
     public ArrayList<Mail> queryAllMail(Config config) {
         System.out.println("[INFO] Calling MySQL::queryAllMail()...");
-
         ArrayList<Mail> mailList = new ArrayList<>();
         //查询主表,子表,构建Mail对象列表
         String sql = "SELECT * FROM mail WHERE cid=" + config.getId() + ";";

@@ -380,16 +380,15 @@ public class HomePane {
         });
 
         addNewConfig.setOnAction(e -> {
-            InitPane.start(true);
-            cbo.setItems(null);
-            cbo.getItems().addAll(API.CONFIGS);
-            cbo.setValue(config);
+            InitPane.start(true, cbo);
+            config = cbo.getValue();
         });
 
         delConfig.setOnAction(e -> {
             API.delConfig(config.getId());
-            cbo.setItems(null);
-            cbo.getItems().addAll(API.CONFIGS);
+            API.checkNewMail();
+            cbo.getItems().remove(config);
+            cbo.setValue(API.CONFIGS.get(0));
             reloadList(listView, "InBox", cbo);
         });
 
@@ -447,6 +446,7 @@ public class HomePane {
         //ComboBox选中事件
         cbo.setOnAction(e -> {
             reloadList(listView, "InBox", cbo);
+            config = cbo.getValue();
         });
 
 

@@ -30,7 +30,7 @@ public class Test {
         long startTime = System.currentTimeMillis();
         API.init();
         ReceiveMail receiveMail = new ReceiveMail(API.CONFIGS.get(0));
-        ArrayList<Mail> list = MailParser.parse(receiveMail.fetchInbox());
+        ArrayList<Mail> list = new MailParser().parse(receiveMail.fetchInbox());
         ArrayList<Mail> newMail = new ArrayList<>();
         HashSet<String> inbox = new HashSet<>();
         for(Mail m: API.queryInbox(API.CONFIGS.get(0))) {

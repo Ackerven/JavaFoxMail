@@ -16,7 +16,7 @@ import java.util.Enumeration;
  */
 public class MailParser {
 
-    private static Mail parse(Message message) {
+    private Mail parse(Message message) {
         Mail mail = new Mail();
         try {
             MimeMessageParser parser = new MimeMessageParser((MimeMessage) message).parse();
@@ -51,7 +51,7 @@ public class MailParser {
         return mail;
     }
 
-    public static ArrayList<Mail> parse(Message... messages) {
+    public ArrayList<Mail> parse(Message... messages) {
         ArrayList<Mail> list = new ArrayList<>();
         if (messages == null || messages.length == 0) {
             System.out.println("没有任何邮件");
