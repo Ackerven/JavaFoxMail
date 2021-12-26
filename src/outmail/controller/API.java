@@ -14,7 +14,6 @@ import javax.mail.Transport;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Timer;
 
 /**
  * * 前后端接口
@@ -30,7 +29,7 @@ public class API {
     private static final String USERNAME = "foxmail";
     private static final String PASSWORD = "foxmail";
     private static final MySQL MYSQL = new MySQL(URL, USERNAME, PASSWORD);
-    private static ArrayList<Timer> timerList = new ArrayList<>();
+    private static ArrayList<CheckNewMail> list = new ArrayList<>();
 
     /**
      * 程序运行时先执行初始化（T）
@@ -52,16 +51,16 @@ public class API {
      * 启动接收新邮件的线程
      */
     public static void checkNewMail() {
-        if(timerList.size() > 0) {
-            for(int i = 0; i < timerList.size(); i++) {
-                timerList.get(i).cancel();
+        if(list.size() > 0) {
+            for(CheckNewMail cn: list) {
+                cn.stop();
             }
         }
-        timerList = new ArrayList<>();
-        for (int i = 0; i < API.CONFIGS.size(); i++) {
-            Timer timer = new Timer(true);
-            timer.schedule(new CheckNewMail(API.CONFIGS.get(i)), 0L, 30000L);
-            timerList.add(timer);
+        list.clear();
+        for(Config config: CONFIGS) {
+            CheckNewMail cnm = new CheckNewMail(config, 20000L);
+            cnm.start();
+            list.add(cnm);
         }
     }
 
