@@ -29,7 +29,7 @@ public class API {
     private static final String USERNAME = "foxmail";
     private static final String PASSWORD = "foxmail";
     private static final MySQL MYSQL = new MySQL(URL, USERNAME, PASSWORD);
-    private static CheckNewMail cnm = new CheckNewMail(10000L);
+    private static CheckNewMail cnm = new CheckNewMail(20000L);
 
     /**
      * 程序运行时先执行初始化（T）
